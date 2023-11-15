@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tic_tac_flutter/blocs/match/match_bloc.dart';
 
 enum Pressed {
   pressedByUser,
@@ -6,48 +8,46 @@ enum Pressed {
   notPressed,
 }
 
-String returnText(Pressed pressed) {
-  switch (pressed) {
-    case Pressed.pressedByUser:
-      return 'X';
-    case Pressed.pressedByOpponent:
-      return 'O';
-    case Pressed.notPressed:
-      return '';
+String returnText(
+    String val, List<String> playerSelected, List<String> rivalSelected) {
+  if (playerSelected.contains(val)) {
+    return 'X';
+  } else if (rivalSelected.contains(val)) {
+    return 'O';
+  } else {
+    return '';
   }
 }
 
-class Tile extends StatefulWidget {
-  const Tile({Key? key}) : super(key: key);
+class Tile extends StatelessWidget {
+  final String value;
 
-  @override
-  State<Tile> createState() => TileState();
-}
-
-class TileState extends State<Tile> {
-  Pressed _pressed = Pressed.notPressed;
+  const Tile({Key? key, required this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          setState(() {
-            _pressed = Pressed.pressedByUser;
-          });
-        },
-        child: Container(
-          color: const Color.fromARGB(255, 0, 100, 255),
-          width: 100,
-          height: 100,
-          margin: const EdgeInsets.all(5),
-          child: Center(
-            child: Text(
-              returnText(_pressed),
-              style: const TextStyle(
-                color: CupertinoColors.white,
+    final provider = BlocProvider.of<MatchBloc>(context);
+
+    return BlocBuilder<MatchBloc, MatchState>(builder: (context, state) {
+      return GestureDetector(
+          onTap: () {
+            provider.add(AddTile(value: value));
+            print('Tile pressed: $value');
+          },
+          child: Container(
+            color: const Color.fromARGB(255, 0, 100, 255),
+            width: 100,
+            height: 100,
+            margin: const EdgeInsets.all(5),
+            child: Center(
+              child: Text(
+                returnText(value, state.playerSelected, state.rivalSelected),
+                style: const TextStyle(
+                  color: CupertinoColors.white,
+                ),
               ),
             ),
-          ),
-        ));
+          ));
+    });
   }
 }
