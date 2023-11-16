@@ -7,6 +7,19 @@ void main() {
   runApp(const MyApp());
 }
 
+String returnStatus(Status status) {
+  switch (status) {
+    case Status.playing:
+      return 'Playing';
+    case Status.win:
+      return 'Player Won';
+    case Status.lose:
+      return 'Rival Won';
+    case Status.draw:
+      return 'Draw';
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -37,8 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return BlocBuilder<MatchBloc, MatchState>(builder: (context, state) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: Text(
-              state.gameStatus == Status.playing ? 'Playing' : 'Game Over'),
+          middle: Text(returnStatus(state.gameStatus)),
           leading: GestureDetector(
             onTap: () {
               BlocProvider.of<MatchBloc>(context).add(ResetMatch());

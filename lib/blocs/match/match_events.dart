@@ -7,9 +7,10 @@ class ResetMatch extends MatchEvent {}
 
 class AddTile extends MatchEvent {
   final String value;
-  final bool isRival;
 
-  AddTile({required this.value, this.isRival = false});
+  AddTile({required this.value});
 }
 
 class CheckStatus extends MatchEvent {}
+
+class AddTileRival extends MatchEvent {}

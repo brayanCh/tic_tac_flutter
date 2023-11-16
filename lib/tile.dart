@@ -31,8 +31,16 @@ class Tile extends StatelessWidget {
     return BlocBuilder<MatchBloc, MatchState>(builder: (context, state) {
       return GestureDetector(
           onTap: () {
+            if (state.gameStatus != Status.playing ||
+                state.playerSelected.contains(value) ||
+                state.rivalSelected.contains(value)) {
+              return;
+            }
             provider.add(AddTile(value: value));
-            print('Tile pressed: $value');
+            provider.add(AddTileRival());
+            if (state.playerSelected.length >= 2) {
+              provider.add(CheckStatus());
+            }
           },
           child: Container(
             color: const Color.fromARGB(255, 0, 100, 255),
