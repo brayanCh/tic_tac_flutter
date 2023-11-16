@@ -34,20 +34,20 @@ class MatchState {
     int count1InSecondDigit = 0;
     int count2InSecondDigit = 0;
 
-    for (int i = 0; i < playerSelected.length; i++) {
-      if (playerSelected[i].startsWith('0')) {
+    for (int i = 0; i < tiles.length; i++) {
+      if (tiles[i].startsWith('0')) {
         count0InFirstDigit++;
-      } else if (playerSelected[i].startsWith('1')) {
+      } else if (tiles[i].startsWith('1')) {
         count1InFirstDigit++;
-      } else if (playerSelected[i].startsWith('2')) {
+      } else if (tiles[i].startsWith('2')) {
         count2InFirstDigit++;
       }
 
-      if (playerSelected[i].endsWith('0')) {
+      if (tiles[i].endsWith('0')) {
         count0InSecondDigit++;
-      } else if (playerSelected[i].endsWith('1')) {
+      } else if (tiles[i].endsWith('1')) {
         count1InSecondDigit++;
-      } else if (playerSelected[i].endsWith('2')) {
+      } else if (tiles[i].endsWith('2')) {
         count2InSecondDigit++;
       }
     }
@@ -57,12 +57,12 @@ class MatchState {
         count0InSecondDigit == 3 ||
         count1InSecondDigit == 3 ||
         count2InSecondDigit == 3 ||
-        (playerSelected.contains('00') &&
-            playerSelected.contains('11') &&
-            playerSelected.contains('22')) ||
-        (playerSelected.contains('02') &&
-            playerSelected.contains('11') &&
-            playerSelected.contains('20'))) {
+        (tiles.contains('00') &&
+            tiles.contains('11') &&
+            tiles.contains('22')) ||
+        (tiles.contains('02') &&
+            tiles.contains('11') &&
+            tiles.contains('20'))) {
       return true;
     }
     return false;
@@ -70,9 +70,14 @@ class MatchState {
 
   MatchState checkStatus() {
     if (_findWinner(playerSelected)) {
+      print('win');
       return copyWith(gameStatus: Status.win);
     } else if (_findWinner(rivalSelected)) {
+      print('lose');
       return copyWith(gameStatus: Status.lose);
+    } else if (playerSelected.length + rivalSelected.length == 9) {
+      print('draw');
+      return copyWith(gameStatus: Status.draw);
     }
     return copyWith(gameStatus: Status.playing);
   }
